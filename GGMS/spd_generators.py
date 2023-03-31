@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.datasets import make_sparse_spd_matrix
 import json
 import networkx as nx
-from stat_funcs import pcorr, pcorr_to_edge_dict
+from GGMS.stat_funcs import pcorr, pcorr_to_edge_dict
 
 def write_chol_calibration(params, dim):
    obj = params
@@ -38,6 +38,6 @@ def generate_chol_model(dim, param, zero_tol=1e-6, random_state=None, invertor=n
     partcorr = pcorr(precision)
     edge_dict = pcorr_to_edge_dict(partcorr)
     graph = nx.empty_graph(dim)
-    graph.add_edges_from([edge for edge in edge_dict if edge_dict[edge] - 0 > zero_tol])
+    graph.add_edges_from([edge for edge in edge_dict if np.abs(edge_dict[edge] - 0) > zero_tol])
 
     return precision, covariance, partcorr, edge_dict, graph

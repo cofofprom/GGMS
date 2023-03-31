@@ -1,5 +1,6 @@
 import numpy as np
-from scipy.stats import t
+from scipy.stats import t, norm
+import networkx as nx
 
 def pcorr(precision):
     """
@@ -61,3 +62,9 @@ def test_edges(edge_dict, n, dim):
         pvalue_edge_dict[edge] = pvalue
 
     return pvalue_edge_dict
+
+def edge_dict_to_graph(edge_dict, dim, zero_tol=1e-6):
+    graph = nx.empty_graph(dim)
+    graph.add_edges_from([edge for edge in edge_dict if np.abs(edge_dict[edge] - 0) > zero_tol])
+
+    return graph
