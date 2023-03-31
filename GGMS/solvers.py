@@ -1,7 +1,6 @@
 import numpy as np
 from stat_funcs import pcorr, pcorr_to_edge_dict, test_edges
 import networkx as nx
-from spd_generators import generate_chol_model
 
 class MHT:
     """ABC for MHT solvers"""
@@ -146,24 +145,3 @@ def confusion(pred, true):
     FN = len((full - p) & t)
     
     return TP, TN, FP, FN
-
-cov, prec, pc, ed, graph = generate_chol_model(5, 0.87, random_state=42)
-
-si = SimInf()
-bonf = Bonferroni()
-holm = Holm()
-bh = BenjaminiHochberg()
-by = BenjaminiYekutieli()
-
-samples = np.random.multivariate_normal(np.zeros(5), cov, size=22)
-si.fit(samples)
-bonf.fit(samples)
-holm.fit(samples)
-bh.fit(samples)
-by.fit(samples)
-
-print(confusion(si.graph, graph))
-print(confusion(bonf.graph, graph))
-print(confusion(holm.graph, graph))
-print(confusion(bh.graph, graph))
-print(confusion(by.graph, graph))
