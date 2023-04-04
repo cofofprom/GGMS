@@ -1,5 +1,6 @@
 import numpy as np
 from GGMS.solvers import *
+from GGMS.spd_generators import *
 import pandas as pd
 
 def perform_experiments_with_given_model(n_samples, covariance, true_graph, num_experiments, solvers, metrics, ranger=range):
@@ -20,3 +21,24 @@ def perform_experiments_with_given_model(n_samples, covariance, true_graph, num_
         solver_means[solver] = np.mean(np.array(solver_results[solver]), axis=1)
 
     return pd.DataFrame(solver_means, index=[metric.__name__ for metric in metrics])
+
+
+def given_density_experiment(n_samples, N, density_param, S_exp, S_obs, solvers, metrics, ranger=range):
+    chol_models = []
+    for _ in ranger(S_exp):
+        prec, cov, pc, ed, G = generate_chol_model(N, density_param)
+        chol_models.append((prec, cov, pc, ed, G))
+    final_exp_result = None
+    for model in chol_models:
+        prec, cov, pc, ed, G = model
+        exp_result = perform_experiments_with_given_model(n_samples, cov, G, S_obs, solvers, metrics, ranger=range).T
+
+        if final_exp_result is not None:
+            final_exp_result += exp_result
+        else:
+            final_exp_result = exp_result
+
+
+    final_exp_result /= S_exp
+
+    return final_exp_result

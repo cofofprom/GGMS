@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.stats import t, norm
+from scipy.stats import t
 import networkx as nx
 
 def pcorr(precision):
@@ -12,7 +12,7 @@ def pcorr(precision):
     D = np.diag(np.sqrt(1 / np.diag(precision)))
 
     pc = -(D @ precision @ D)
-    pc[np.diag_indices_from(precision)] = 1
+    np.fill_diagonal(pc, 1)
 
     return pc
 
