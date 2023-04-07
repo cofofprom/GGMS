@@ -7,10 +7,7 @@ RUN apt-get install -y python3-pip
 
 WORKDIR /home
 
-COPY GGMS GGMS
-COPY algo_test.ipynb algo_test.ipynb
-COPY algo_density_test.ipynb algo_density_test.ipynb
-COPY requirements.txt requirements.txt
+COPY . .
 
 RUN pip3 install -r requirements.txt
 
