@@ -10,13 +10,15 @@ if __name__ == '__main__':
     N = 20
     n = 40
     S_obs = 100
-    S_exp = 1000
+    S_exp = 500
     density_params = [0.94, 0.87, 0.85, 0.77, 0.74, 0.68, 0.64, 0.55, 0.4] # 0.1 to 0.9
     solvers = [SimInf(), Bonferroni(), Holm(), BenjaminiHochberg(), BenjaminiYekutieli()]
     metrics = [FP, FN, FDR, TPR, F1]
 
     with mp.Pool() as pool:
-        results = [pool.apply_async(given_density_experiment, (n, N, dens, S_exp, S_obs, solvers, metrics)) for dens in density_params]
+        results = [pool.apply_async(given_density_experiment, (n, N, dens, S_exp,
+                                                               S_obs, solvers, metrics,
+                                                               generate_peng_model)) for dens in np.arange(0.1, 1, step=0.1)]
         start_time = localtime()
         print(f'Started at {start_time.tm_hour}:{start_time.tm_min}')
         start = time()

@@ -41,3 +41,24 @@ def generate_chol_model(dim, param, zero_tol=1e-6, random_state=None, invertor=n
     graph.add_edges_from([edge for edge in edge_dict if np.abs(edge_dict[edge] - 0) > zero_tol])
 
     return precision, covariance, partcorr, edge_dict, graph
+
+
+def generate_peng_model(dim, param, random_state=None, invertor=np.linalg.inv):
+    graph = nx.gnp_random_graph(dim, param, seed=random_state)
+    base = nx.to_numpy_array(graph)
+    base *= np.random.uniform(0.5, 1, size=(dim, dim)) * np.random.choice([-1, 1], size=(dim, dim))
+    
+    for row_idx in range(len(base)):
+        row_sum = np.sum(np.abs(base[row_idx]))
+        if row_sum != 0:
+            base[row_idx] /= 1.5 * row_sum
+        
+    base += np.eye(dim)
+    precision = (base + base.T) / 2
+    covariance = invertor(precision)
+    D = np.diag(1 / np.sqrt(np.diag(covariance)))
+    covariance = D @ covariance @ D
+    partcorr = pcorr(precision)
+    edge_dict = pcorr_to_edge_dict(partcorr)
+    
+    return precision, covariance, partcorr, edge_dict, graph

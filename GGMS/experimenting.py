@@ -23,10 +23,10 @@ def perform_experiments_with_given_model(n_samples, covariance, true_graph, num_
     return pd.DataFrame(solver_means, index=[metric.__name__ for metric in metrics])
 
 
-def given_density_experiment(n_samples, N, density_param, S_exp, S_obs, solvers, metrics, ranger=range):
+def given_density_experiment(n_samples, N, density_param, S_exp, S_obs, solvers, metrics, model_generator, ranger=range):
     chol_models = []
     for _ in ranger(S_exp):
-        prec, cov, pc, ed, G = generate_chol_model(N, density_param)
+        prec, cov, pc, ed, G = model_generator(N, density_param)
         chol_models.append((prec, cov, pc, ed, G))
     final_exp_result = None
     for model in chol_models:
