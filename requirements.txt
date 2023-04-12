@@ -6,3 +6,4 @@ matplotlib
 pandas
 notebook
 scikit-learn
+ipywidgets
