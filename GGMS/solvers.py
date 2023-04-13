@@ -1,16 +1,26 @@
 import numpy as np
-from GGMS.stat_funcs import pcorr, pcorr_to_edge_dict, test_edges
+from GGMS.stat_funcs import pcorr, pcorr_to_edge_dict, test_edges_pcorr, test_edges_corr
 import networkx as nx
 
-def perform_test(X, cov=np.cov, inv=np.linalg.inv):
+def perform_test_pcorr(X, cov=np.cov, inv=np.linalg.inv):
     covariance = cov(X.T)
     precision = inv(covariance)
     partcorr = pcorr(precision)
     pcorr_edges = pcorr_to_edge_dict(partcorr)
-    tests = test_edges(pcorr_edges, X.shape[0], X.shape[1])
+    tests = test_edges_pcorr(pcorr_edges, X.shape[0], X.shape[1])
     n_tests = len(tests)
 
     return covariance, precision, partcorr, pcorr_edges, tests, n_tests
+
+
+def perform_test_corr(X):
+    corr = np.corrcoef(X.T)
+    corr_edges = pcorr_to_edge_dict(corr)
+    tests = test_edges_corr(corr_edges, X.shape[0])
+    n_tests = len(tests)
+    
+    return corr, corr, corr, corr_edges, tests, n_tests
+
 
 class MHT:
     """ABC for MHT solvers"""

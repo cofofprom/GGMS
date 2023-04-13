@@ -7,3 +7,4 @@ pandas
 notebook
 scikit-learn
 ipywidgets
+seaborn

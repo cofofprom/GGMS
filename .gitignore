@@ -2,3 +2,4 @@ data
 GGMS/__pycache__
 logfile.log
 .vscode
+remote_logfile.log

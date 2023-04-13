@@ -32,6 +32,15 @@ def partcorr_test(r, n, k):
 
     return pvalue
 
+def corr_test(r, n):
+    dof = n - 2
+    
+    stat = r * np.sqrt(dof / (1 - np.power(r, 2)))
+    pvalue = t.sf(np.abs(stat), dof)
+    
+    return pvalue
+
+
 def pcorr_to_edge_dict(pcorr):
     """
     Shrinks upper diagonal of partial correlation matrix in dict of (v, u): p_vu
@@ -46,7 +55,16 @@ def pcorr_to_edge_dict(pcorr):
 
     return edge_dict
 
-def test_edges(edge_dict, n, dim):
+def test_edges_corr(edge_dict, n):
+    pvalue_edge_dict = {}
+    for edge in edge_dict:
+        r = edge_dict[edge]
+        pvalue = corr_test(r, n)
+        pvalue_edge_dict[edge] = pvalue
+
+    return pvalue_edge_dict
+
+def test_edges_pcorr(edge_dict, n, dim):
     """
     Perform multiple pcorr tests for all edges
     
