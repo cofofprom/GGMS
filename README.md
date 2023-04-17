@@ -20,7 +20,7 @@ step 1. Install Ubuntu with Python3 and Pip
 FROM ubuntu
 
 RUN apt-get update
-RUN apt-get upgrade
+RUN apt-get upgrade -y
 RUN apt-get install -y python3
 RUN apt-get install -y python3-pip
 ```
